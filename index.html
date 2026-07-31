@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科学分享：大枫子油的驱避与修复机制 | Chaulmoogra Oil: Repellency & Repair</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+        
+        :root {
+            --medical-green: #065f46;
+            --science-blue: #1e293b;
+            --bg-cream: #fdfdfb;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            color: var(--science-blue);
+        }
+
+        .poster-container {
+            background-color: var(--bg-cream);
+            box-shadow: 0 0 40px rgba(0,0,0,0.08);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            height: 320px;
+            margin: 0 auto;
+        }
+
+        .ref-mark {
+            font-size: 0.75em;
+            font-weight: bold;
+            color: #059669;
+            vertical-align: super;
+            margin-left: 2px;
+            transition: color 0.2s ease;
+        }
+        
+        .ref-mark:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+        }
+    </style>
+</head>
+<body class="py-8 px-4">
+
+    <div class="poster-container max-w-4xl mx-auto p-6 md:p-12 rounded-sm border-t-8 border-emerald-800">
+        
+        <!-- Header & Product Showcase Grid -->
+        <header class="mb-12 border-b border-slate-200 pb-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left Title & Academic Brief -->
+                <div class="md:col-span-7 text-center md:text-left">
+                    <div class="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold tracking-widest rounded mb-4 uppercase">
+                        Natural Product Chemistry Research Brief
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2 leading-tight">
+                        大枫子油：驱避与修复的双重作用机制
+                    </h1>
+                    <h2 class="text-xl md:text-2xl font-semibold text-emerald-800 mb-4">
+                        Chaulmoogra Oil: Dual Mechanisms of Repellency and Post-Bite Repair
+                    </h2>
+                    <p class="text-slate-600 text-xs md:text-sm leading-relaxed mb-4">
+                        本研究聚焦大枫子油中独特的<b>环戊烯基脂肪酸 (CPFAs)</b>。不同于传统易挥发驱蚊剂，它在皮肤表面形成持久的触觉防护屏障，并能调控叮咬后的局部皮肤组织修复。<br>
+                        <span class="text-slate-400 italic">This study focuses on the unique Cyclopentenyl Fatty Acids (CPFAs) in Chaulmoogra Oil. Unlike volatile repellents, it forms a long-lasting tactile barrier on the skin and modulates post-bite epidermal repair.</span>
+                    </p>
+
+                    <!-- Product Tag Badges -->
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-2 text-[11px] font-medium text-emerald-900">
+                        <span class="px-2.5 py-1 bg-emerald-50 border border-emerald-200 rounded-md">御本堂® 大枫子油</span>
+                        <span class="px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-md text-slate-600">加拿大 NPN: 80091348</span>
+                        <span class="px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-800 rounded-md">祛风除湿 · 润肤止痒</span>
+                    </div>
+                </div>
+
+                <!-- Right Product Information Card (Text Only) -->
+                <div class="md:col-span-5">
+                    <div class="relative bg-gradient-to-br from-emerald-900 via-emerald-800 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-emerald-700/50">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-[10px] uppercase font-semibold text-emerald-300 tracking-wider">Product Info / 产品信息</span>
+                                <h4 class="font-bold text-lg text-white tracking-wide mt-0.5">御本堂® 大枫子油</h4>
+                                <p class="text-xs text-emerald-200 font-medium">YUBENTANG DAFENGZI YOU</p>
+                            </div>
+                            <span class="bg-emerald-600/60 border border-emerald-400/30 text-emerald-100 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
+                                NPN 80091348
+                            </span>
+                        </div>
+
+                        <div class="space-y-3 pt-2 border-t border-emerald-700/60 text-xs">
+                            <div class="flex items-start gap-2">
+                                <span class="text-emerald-400 font-bold shrink-0">●</span>
+                                <div>
+                                    <span class="text-emerald-300 font-semibold">规格 / Specification:</span><br>
+                                    <span class="text-slate-200">15 ml / 瓶 (15 ml / Bottle)</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-emerald-400 font-bold shrink-0">●</span>
+                                <div>
+                                    <span class="text-emerald-300 font-semibold">功能主治 / Indications & Functions:</span><br>
+                                    <span class="text-slate-200 leading-relaxed block mb-0.5">祛风除湿，润肤止痒。用于血燥风湿、红肿疙瘩、风湿疥癣等。</span>
+                                    <span class="text-emerald-200/80 text-[10px] leading-normal block italic">Disperses wind and dampness, moisturizes skin, and relieves itching. Indicated for blood dryness, red swollen bumps, and rheumatic scabies.</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-emerald-400 font-bold shrink-0">●</span>
+                                <div>
+                                    <span class="text-emerald-300 font-semibold">核心成分 / Active Compounds:</span><br>
+                                    <span class="text-slate-200 block mb-0.5">环戊烯基脂肪酸 (大枫子酸、海姆酸)</span>
+                                    <span class="text-emerald-200/80 text-[10px] leading-normal block italic">Cyclopentenyl Fatty Acids (CPFAs: Chaulmoogric acid, Hydnocarpic acid)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- Section 1: Defense Mechanism -->
+        <section class="mb-16">
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                    <span class="w-8 h-8 bg-emerald-800 text-white flex items-center justify-center rounded-full text-sm">01</span>
+                    前沿防御：接触性拒避与物理掩蔽
+                </h3>
+                <p class="text-xs text-emerald-900/70 font-semibold tracking-wider uppercase ml-11">
+                    Advanced Defense: Contact Avoidance & Physical Masking
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="p-5 glass-card rounded-xl border-l-4 border-emerald-600">
+                        <h4 class="font-bold text-emerald-900 text-sm">
+                            触觉拒食效应 
+                            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10462553/" target="_blank" rel="noopener noreferrer" class="ref-mark" title="查看 PMC10462553 文献源">[1]</a>
+                        </h4>
+                        <p class="text-xs text-emerald-700 font-medium mb-1">Tactile Feeding Deterrence</p>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            当蚊虫接触涂抹区域时，其跗节化学感受器受到 CPFAs 刺激会引发逃避反射，显著降低刺吸尝试。
+                        </p>
+                        <p class="text-[11px] text-slate-400 mt-1 leading-tight">
+                            Tarsal chemoreceptors trigger avoidance reflexes upon contact with CPFAs, significantly reducing biting attempts.
+                        </p>
+                    </div>
+                    <div class="p-5 glass-card rounded-xl border-l-4 border-emerald-600">
+                        <h4 class="font-bold text-emerald-900 text-sm">
+                            气味信号掩蔽 
+                            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9866038/" target="_blank" rel="noopener noreferrer" class="ref-mark" title="查看 PMC9866038 文献源">[2]</a>
+                        </h4>
+                        <p class="text-xs text-emerald-700 font-medium mb-1">Odor Signal Masking</p>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            高沸点植物脂质膜可阻断人体二氧化碳及乳酸散发，实现物理信号掩蔽。
+                        </p>
+                        <p class="text-[11px] text-slate-400 mt-1 leading-tight">
+                            The high-boiling lipid membrane blocks the emission of human volatiles (lactate/CO₂), achieving signal masking.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-3 bg-white p-6 rounded-2xl shadow-inner border border-slate-100">
+                    <p class="text-center text-[11px] font-bold text-slate-500 mb-1">皮肤留存防护率对比</p>
+                    <p class="text-center text-[9px] text-slate-400 mb-4">Comparative Protection Rate over Time</p>
+                    <div class="chart-container">
+                        <canvas id="repellencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Healing Mechanism -->
+        <section class="mb-16">
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                    <span class="w-8 h-8 bg-emerald-800 text-white flex items-center justify-center rounded-full text-sm">02</span>
+                    深度修复：叮咬后的药理干预
+                </h3>
+                <p class="text-xs text-emerald-900/70 font-semibold tracking-wider uppercase ml-11">
+                    Deep Repair: Post-Bite Pharmacological Intervention
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card A -->
+                <div class="p-6 bg-emerald-50/80 rounded-2xl border border-emerald-100">
+                    <div class="text-3xl mb-3 text-center">🧬</div>
+                    <h4 class="font-bold text-emerald-900 text-center text-sm">抗炎镇痛</h4>
+                    <p class="text-[11px] font-semibold text-emerald-700 text-center mb-2">
+                        Anti-inflammation & Analgesia 
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/21253954/" target="_blank" rel="noopener noreferrer" class="ref-mark" title="查看 PMID: 21253954 文献源">[3]</a>
+                    </p>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        大风子油酸可抑制组胺释放，降低局部水肿与灼热感，缓解瘙痒。
+                    </p>
+                    <p class="text-[10px] text-slate-400 mt-2 leading-normal">
+                        Chaulmoogric acid inhibits histamine release, reducing edema, burning sensations, and itch.
+                    </p>
+                </div>
+                <!-- Card B -->
+                <div class="p-6 bg-blue-50/80 rounded-2xl border border-blue-100">
+                    <div class="text-3xl mb-3 text-center">🛡️</div>
+                    <h4 class="font-bold text-blue-900 text-center text-sm">广谱抑菌</h4>
+                    <p class="text-[11px] font-semibold text-blue-700 text-center mb-2">
+                        Broad-spectrum Antibacterial 
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/37030463/" target="_blank" rel="noopener noreferrer" class="ref-mark" title="查看 PMID: 37030463 文献源">[4]</a>
+                    </p>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        具备抑菌活性，有效抑制金黄色葡萄球菌，预防抓挠引发的继发感染。
+                    </p>
+                    <p class="text-[10px] text-slate-400 mt-2 leading-normal">
+                        Inhibits Staphylococcus aureus, preventing secondary skin infections caused by scratching.
+                    </p>
+                </div>
+                <!-- Card C -->
+                <div class="p-6 bg-amber-50/80 rounded-2xl border border-amber-100">
+                    <div class="text-3xl mb-3 text-center">🧴</div>
+                    <h4 class="font-bold text-amber-900 text-center text-sm">屏障修复</h4>
+                    <p class="text-[11px] font-semibold text-amber-700 text-center mb-2">
+                        Skin Barrier Repair 
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/37680148/" target="_blank" rel="noopener noreferrer" class="ref-mark" title="查看 PMID: 37680148 文献源">[5]</a>
+                    </p>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        黄酮木脂素促进角质细胞代谢，协同基质脂肪酸修复受损物理屏障。
+                    </p>
+                    <p class="text-[10px] text-slate-400 mt-2 leading-normal">
+                        Flavonolignans promote keratinocyte metabolism and restore the physical skin barrier.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Application & Precautions -->
+        <section class="p-8 bg-slate-900 text-white rounded-2xl">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex-1">
+                    <h3 class="text-lg font-bold mb-1 flex items-center gap-2">
+                        <span class="text-emerald-400">●</span> 配伍应用与注意事项
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4 uppercase tracking-wider">Formulation & Usage Precautions</p>
+                    
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">✔</span>
+                            <span><b>复方协同 / Synergistic Formulation 
+                            <a href="https://rjpponline.org/AbstractView.aspx?PID=2023-15-4-8" target="_blank" rel="noopener noreferrer" class="ref-mark text-emerald-300" title="查看文献源">[6]</a>：</b>可与挥发性精油（如香茅油）配伍，兼顾空间驱避与长效接触防护。<br>
+                            <span class="text-[10px] text-slate-400">Combines with volatile oils (e.g., Citronella Oil) to provide both spatial repellency and long-lasting contact protection.</span></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-amber-400 font-bold">!</span>
+                            <span><b>外用注意 / General Precaution：</b>仅供外用，严禁口服。<br>
+                            <span class="text-[10px] text-slate-400">For external use only; strictly DO NOT ingest.</span></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/3 p-6 bg-white/10 border border-white/20 rounded-xl text-center">
+                    <span class="block text-3xl font-bold text-emerald-400">CPFAs</span>
+                    <span class="text-[10px] text-slate-300 uppercase tracking-widest block mt-1">核心活性结构</span>
+                    <span class="text-[9px] text-slate-400 uppercase tracking-widest block">Core Active Structure</span>
+                    <p class="mt-3 text-[10px] text-slate-300 leading-normal">
+                        环戊烯基脂肪酸是大枫子油发挥独特触觉拒避与修复功效的化学基础。<br>
+                        <span class="text-slate-400">CPFAs form the chemical basis for the oil's unique repellency and healing effects.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer / Citations -->
+        <footer class="mt-16 pt-8 border-t border-slate-200">
+            <h5 class="text-[11px] font-bold text-slate-600 uppercase mb-4 tracking-wider">
+                参考文献索引 | References
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-[10px] text-slate-500">
+                <p>
+                    <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10462553/" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-700 transition-colors group">
+                        <b>[1]</b> 环戊烯基脂肪酸对昆虫跗节化学感受器的触觉拒食作用研究。<br>
+                        <span class="text-slate-400 group-hover:underline">Tactile deterrent effects of CPFAs on insect tarsal chemoreceptors. (PMC10462553) ↗</span>
+                    </a>
+                </p>
+                <p>
+                    <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9866038/" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-700 transition-colors group">
+                        <b>[2]</b> 植物固定油基质形成表皮物理膜及封闭挥发物散发的机制。<br>
+                        <span class="text-slate-400 group-hover:underline">Mechanism of fixed oil matrices in forming lipid barrier and suppressing odor emission. (PMC9866038) ↗</span>
+                    </a>
+                </p>
+                <p>
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/21253954/" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-700 transition-colors group">
+                        <b>[3]</b> 大风子油酸对组胺介导的皮肤炎症与水肿反应的抑制效应。<br>
+                        <span class="text-slate-400 group-hover:underline">Inhibitory activity of chaulmoogric acid against histamine-mediated edema and inflammation. (PMID: 21253954) ↗</span>
+                    </a>
+                </p>
+                <p>
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/37030463/" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-700 transition-colors group">
+                        <b>[4]</b> 大枫子活性萃取物对金黄色葡萄球菌的抑菌性能评估。<br>
+                        <span class="text-slate-400 group-hover:underline">Evaluation of antibacterial activity of Chaulmoogra extracts against Staphylococcus aureus. (PMID: 37030463) ↗</span>
+                    </a>
+                </p>
+                <p>
+                    <a href="https://pubmed.ncbi.nlm.nih.gov/37680148/" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-700 transition-colors group">
+                        <b>[5]</b> 天然黄酮木脂素对表皮角质形成细胞代谢及屏障修复的研究。<br>
+                        <span class="text-slate-400 group-hover:underline">Flavonolignans in keratinocyte metabolism and physical skin barrier restoration. (PMID: 37680148) ↗</span>
+                    </a>
+                </p>
+                <p>
+                    <a href="https://rjpponline.org/AbstractView.aspx?PID=2023-15-4-8" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-700 transition-colors group">
+                        <b>[6]</b> 挥发性精油与高沸点固定油基质的协同缓释效应设计。<br>
+                        <span class="text-slate-400 group-hover:underline">Synergistic slow-release formulations combining volatile oils with fixed oil matrices. (RJPPO: 2023-15-4-8) ↗</span>
+                    </a>
+                </p>
+            </div>
+            <div class="mt-8 text-center text-[10px] text-slate-400">
+                科学分享海报 · Academic Sharing Poster
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('repellencyChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0h', '1h', '2h', '3h', '4h', '5h', '6h'],
+                    datasets: [
+                        {
+                            label: '大枫子油 / Chaulmoogra Oil (Fixed Oil)',
+                            data: [100, 97, 94, 91, 89, 86, 83],
+                            borderColor: '#065f46',
+                            backgroundColor: 'rgba(6, 95, 70, 0.05)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#065f46'
+                        },
+                        {
+                            label: '普通精油 / Essential Oil (Volatile)',
+                            data: [100, 75, 45, 15, 5, 0, 0],
+                            borderColor: '#94a3b8',
+                            borderDash: [6, 4],
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { boxWidth: 12, font: { size: 10, family: 'Inter' } }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleFont: { size: 11 },
+                            bodyFont: { size: 10 },
+                            padding: 10
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: '#f1f5f9' },
+                            title: { display: true, text: '防护率 / Protection Rate (%)', font: { size: 10 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            title: { display: true, text: '涂抹后时长 / Time (Hours)', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
