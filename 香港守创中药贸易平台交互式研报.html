@@ -1,0 +1,1032 @@
+<!-- Chosen Palette: Warm Herbal Neutral (Background #faf8f5, Card #ffffff, Deep Herbal Green #1b3a2b, Jade Accent #3a6d58, Amber Warmth #c86d3d, Muted Slate #5a6561) -->
+<!-- Application Structure Plan: 
+     本单页应用采用“模块化全景看板”架构，突破线性阅读局限，旨在帮助用户多维度探索守创中药贸易平台的商业与运作逻辑。
+     1. Hero & Data Bar: 核心定位、关键指标（200+龙头、40+大宗品种、15%优惠税率、6步流程）。
+     2. Top Governance & Ecosystem: 顶层治理（梁振英/高永文领衔）、运营实体与首批入驻龙头企业矩阵。
+     3. Four Pillars & Comparison: 四大支柱（香港认证、现金结算、供采智联、全球流通）与传统交易模式对比矩阵（交互切换）。
+     4. Quality & STC Certification: 香港STC前置检测机制、金色“正”字标识与理化安全检测指标可视化（Chart.js雷达/柱状图）。
+     5. Interactive Onboarding & Access: 6步入驻全流程交互向导，配合不同主体（基地、饮片厂、药企等）资质门槛核对器。
+     6. Herbal Variety Explorer: 动态搜索与分类筛选“3+13”网络首批上线40+道地大宗药材盘口。
+     7. Commercial Calculator & Policies: 推广期优惠政策计算器（买方/卖方费率减免计算）与南沙/香港政策叠加优势。
+     8. Official Contact & Portal: 官方接入入口、邮箱、电话与实体地址指南。
+-->
+<!-- Visualization & Content Choices:
+     - 治理与支柱: 使用卡片网格+图标组合呈现高管与实体背景（无SVG，使用Unicode与CSS精美布局）。
+     - 模式对比: 交互式对比表格，支持高亮核心痛点差异（如：长账期 vs 现金结算，事后抽检 vs 前置质检）。
+     - 质检标准: 使用 Chart.js 展示 STC 质量检测指标覆盖度，配置显式 r 轴 min/max 轴向比例 (0-100%) 与 20% 刻度标记。
+     - 入驻流程: 步骤条（Stepper）交互，点击不同步骤显示详细输入、审核机制与系统产出。
+     - 资质校验: 选项卡切换（Tab），展示不同实体（种植/饮片/药企/流通/医院）所需的特定证照。
+     - 费用计算器: JavaScript 交互组件，用户输入预估年交易额，自动计算标准费用与推广期省额。
+     - 确认：无任何 SVG 图形，无 Mermaid JS，全用标准 HTML/CSS/Tailwind 及 Chart.js Canvas。
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>香港守创中药贸易平台 - 运作机制与入驻规程交互全景</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        herbal: {
+                            50: '#f4f7f4',
+                            100: '#e3ece4',
+                            600: '#3a6d58',
+                            800: '#1b3a2b',
+                            900: '#11261c',
+                        },
+                        amber: {
+                            500: '#c86d3d',
+                            600: '#b05b2f',
+                        },
+                        stonebg: '#faf8f5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #faf8f5;
+            color: #2c3531;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1ede6;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c5bba8;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800 bg-stonebg min-h-screen flex flex-col">
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-50 bg-herbal-800 text-white shadow-md border-b border-herbal-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl font-bold tracking-tight text-amber-500">◆ 守创中药</span>
+                <span class="hidden md:inline-block text-xs bg-herbal-600 text-white px-2 py-0.5 rounded font-medium">B2B现货交易枢纽</span>
+            </div>
+            <nav class="hidden lg:flex space-x-6 text-sm font-medium">
+                <a href="#overview" class="hover:text-amber-500 transition-colors">平台概览</a>
+                <a href="#pillars" class="hover:text-amber-500 transition-colors">四大支柱</a>
+                <a href="#comparison" class="hover:text-amber-500 transition-colors">模式对比</a>
+                <a href="#stc-quality" class="hover:text-amber-500 transition-colors">STC质检</a>
+                <a href="#onboarding" class="hover:text-amber-500 transition-colors">入驻指引</a>
+                <a href="#herbs" class="hover:text-amber-500 transition-colors">大宗品种</a>
+                <a href="#calculator" class="hover:text-amber-500 transition-colors">优惠测算</a>
+                <a href="#contact" class="hover:text-amber-500 transition-colors">对接通道</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Banner / Key Metrics -->
+        <section id="overview" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                        <span>粤港澳大湾区规则衔接重点项目</span>
+                        <span>•</span>
+                        <span>2024年4月正式运营</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold text-herbal-900 tracking-tight leading-tight">
+                        香港守创中药贸易平台<br>
+                        <span class="text-amber-500 text-xl sm:text-3xl font-bold">全景运作机制与产业入驻规程</span>
+                    </h1>
+                    <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
+                        由<strong class="text-herbal-800">中医药全产业链香港中心</strong>牵头发起，依托广州南沙自贸区制度创新与香港独立第三方检验认证（STC），构建“先检验合格、后挂牌交易”及“现金结算”的全流程数字化现货交易枢纽，破解传统中药材大宗贸易的质控与账期顽疾。
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-2 text-xs font-medium text-gray-600">
+                        <span class="bg-herbal-50 text-herbal-800 px-2.5 py-1 rounded-md border border-herbal-100">✔ 严守法人会员制</span>
+                        <span class="bg-herbal-50 text-herbal-800 px-2.5 py-1 rounded-md border border-herbal-100">✔ 拒绝零售终端</span>
+                        <span class="bg-herbal-50 text-herbal-800 px-2.5 py-1 rounded-md border border-herbal-100">✔ 前置STC质检</span>
+                        <span class="bg-herbal-50 text-herbal-800 px-2.5 py-1 rounded-md border border-herbal-100">✔ 通联资金存管</span>
+                    </div>
+                </div>
+
+                <!-- Live Key Stats Grid -->
+                <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+                    <div class="bg-stonebg p-4 rounded-xl border border-stone-200 text-center">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-herbal-800">200+</div>
+                        <div class="text-xs text-gray-500 font-medium mt-1">首批入驻行业龙头企</div>
+                    </div>
+                    <div class="bg-stonebg p-4 rounded-xl border border-stone-200 text-center">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-amber-500">40+</div>
+                        <div class="text-xs text-gray-500 font-medium mt-1">首批上线大宗道地品种</div>
+                    </div>
+                    <div class="bg-stonebg p-4 rounded-xl border border-stone-200 text-center">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-herbal-800">15%</div>
+                        <div class="text-xs text-gray-500 font-medium mt-1">南沙自贸区企业所得税</div>
+                    </div>
+                    <div class="bg-stonebg p-4 rounded-xl border border-stone-200 text-center">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-amber-500">0天</div>
+                        <div class="text-xs text-gray-500 font-medium mt-1">现金交收拖欠账期</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leadership & Entity Footnote -->
+            <div class="mt-8 pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-gray-600">
+                <div>
+                    <span class="font-bold text-herbal-900">牵头倡议人：</span> 全国政协副主席 梁振英
+                </div>
+                <div>
+                    <span class="font-bold text-herbal-900">香港中心主席/法人代表：</span> 高永文 医生 GBS JP
+                </div>
+                <div>
+                    <span class="font-bold text-herbal-900">运营实体：</span> 广州守创中药有限公司（注册地：广州南沙）
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Governance & Core Pillars -->
+        <section id="pillars" class="space-y-6">
+            <div class="border-l-4 border-herbal-600 pl-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-herbal-900">四大核心支柱与生态治理架构</h2>
+                <p class="text-gray-500 text-xs sm:text-sm mt-1">
+                    介绍平台的顶层设计架构，连接内地产区与港澳及全球中医药终端市场。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Pillar 1 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="w-10 h-10 rounded-lg bg-herbal-100 text-herbal-800 flex items-center justify-center font-bold text-lg mb-4">
+                        1
+                    </div>
+                    <h3 class="text-lg font-bold text-herbal-900 mb-2">香港认证</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        联手香港标准及检定中心（STC），实行“先检验合格，后挂牌交易”。全项指标达标后核发金色“正”字防伪标识。
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-gray-100 text-[11px] font-semibold text-herbal-600">
+                        前置理化风控 • 权威国际公信力
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-lg mb-4">
+                        2
+                    </div>
+                    <h3 class="text-lg font-bold text-herbal-900 mb-2">现金结算</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        依托通联支付（Allinpay）与合作银行实施专户存管。电子签约与交收确认后资金实时解付，杜绝行业商业账期拖欠。
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-gray-100 text-[11px] font-semibold text-amber-600">
+                        银行专户存管 • 斩断三角债
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="w-10 h-10 rounded-lg bg-herbal-100 text-herbal-800 flex items-center justify-center font-bold text-lg mb-4">
+                        3
+                    </div>
+                    <h3 class="text-lg font-bold text-herbal-900 mb-2">供采智联</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        直接对接产地基地与工业制药买方，剔除多级批发中介。透明展示真实加权成交价格，消除黑箱操作。
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-gray-100 text-[11px] font-semibold text-herbal-600">
+                        “3+13”道地网络 • 价格发现
+                    </div>
+                </div>
+
+                <!-- Pillar 4 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-lg mb-4">
+                        4
+                    </div>
+                    <h3 class="text-lg font-bold text-herbal-900 mb-2">全球流通</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        结合南沙自贸区 15% 所得税优惠与香港离岸金融通道，将农副产品转化为符合国际规管的标准工业现货。
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-gray-100 text-[11px] font-semibold text-amber-600">
+                        南沙政策赋能 • 护航中药出海
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ecosystem Showcase -->
+            <div class="bg-herbal-900 text-white rounded-xl p-6 shadow-md space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-herbal-800 pb-4">
+                    <div>
+                        <h3 class="text-base font-bold text-amber-500">首批入驻领军企业与生态参与方</h3>
+                        <p class="text-xs text-gray-300 mt-0.5">汇聚全国龙头中成药企、上市药企及港澳老字号机构</p>
+                    </div>
+                    <span class="mt-2 md:mt-0 text-xs bg-herbal-800 border border-herbal-600 px-2.5 py-1 rounded text-gray-200">
+                        涵盖 28 个省区市及香港特区
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3 text-center text-xs font-medium text-gray-200">
+                    <div class="bg-herbal-800/60 py-2 px-1 rounded border border-herbal-600/50">中国中药</div>
+                    <div class="bg-herbal-800/60 py-2 px-1 rounded border border-herbal-600/50">华润三九</div>
+                    <div class="bg-herbal-800/60 py-2 px-1 rounded border border-herbal-600/50">云南白药</div>
+                    <div class="bg-herbal-800/60 py-2 px-1 rounded border border-herbal-600/50">片仔癀</div>
+                    <div class="bg-herbal-800/60 py-2 px-1 rounded border border-herbal-600/50">修正药业</div>
+                    <div class="bg-herbal-800/60 py-2 px-1 rounded border border-herbal-600/50">扬子江药业</div>
+                    <div class="bg-herbal-800/60 py-2 px-1 rounded border border-herbal-600/50">香港位元堂</div>
+                    <div class="bg-herbal-800/60 py-2 px-1 rounded border border-herbal-600/50">同仁堂国药</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Mode Comparison Matrix -->
+        <section id="comparison" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200 space-y-6">
+            <div class="border-l-4 border-amber-500 pl-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-herbal-900">传统交易模式 vs 守创平台模式</h2>
+                <p class="text-gray-500 text-xs sm:text-sm mt-1">
+                    直观对比两者在准入、质控、流通、定价及资金安全上的结构性差异。点击下方按钮可高亮重点看项。
+                </p>
+            </div>
+
+            <!-- Filter buttons for table -->
+            <div class="flex flex-wrap gap-2 text-xs">
+                <button onclick="filterComparison('all')" id="btn-comp-all" class="px-3 py-1.5 rounded-md font-semibold bg-herbal-800 text-white">全部维度对比</button>
+                <button onclick="filterComparison('quality')" id="btn-comp-quality" class="px-3 py-1.5 rounded-md font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">品质与检测</button>
+                <button onclick="filterComparison('money')" id="btn-comp-money" class="px-3 py-1.5 rounded-md font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">资金与账期</button>
+                <button onclick="filterComparison('chain')" id="btn-comp-chain" class="px-3 py-1.5 rounded-md font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">流通与价格</button>
+            </div>
+
+            <!-- Interactive Table -->
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-xs sm:text-sm text-left border-collapse">
+                    <thead>
+                        <tr class="bg-stonebg border-b border-gray-200 text-herbal-900">
+                            <th class="p-3 font-bold w-1/5">关键运营维度</th>
+                            <th class="p-3 font-bold w-2/5 text-gray-600">传统中药材集贸/专业市场</th>
+                            <th class="p-3 font-bold w-2/5 text-herbal-800 bg-herbal-50/50">守创中药贸易平台模式</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr id="row-access" class="comp-row" data-cat="chain">
+                            <td class="p-3 font-bold text-gray-800">准入门槛</td>
+                            <td class="p-3 text-gray-600">个体户与散户经纪人为主，缺乏系统化身份及资质验真机制。</td>
+                            <td class="p-3 text-herbal-800 font-medium bg-herbal-50/30">严格法人企业会员制，须通过穿透式资质审查与信用核验。</td>
+                        </tr>
+                        <tr id="row-qc" class="comp-row" data-cat="quality">
+                            <td class="p-3 font-bold text-gray-800">品质管控节点</td>
+                            <td class="p-3 text-gray-600">“看样盲买”，缺乏统一量化标准，多为买方货到工厂后事后抽检。</td>
+                            <td class="p-3 text-herbal-800 font-medium bg-herbal-50/30">STC 第三方前置强制检测，双重药典标准，达标授金色“正”字标。</td>
+                        </tr>
+                        <tr id="row-middle" class="comp-row" data-cat="chain">
+                            <td class="p-3 font-bold text-gray-800">流通中介链条</td>
+                            <td class="p-3 text-gray-600">产地小贩 → 产地代销 → 多级批发商 → 药企，环节冗长损耗大。</td>
+                            <td class="p-3 text-herbal-800 font-medium bg-herbal-50/30">产地规范化基地直连工业采购端，剔除中间损耗与投机加价。</td>
+                        </tr>
+                        <tr id="row-price" class="comp-row" data-cat="chain">
+                            <td class="p-3 font-bold text-gray-800">价格形成机制</td>
+                            <td class="p-3 text-gray-600">圈子叫价、暗箱撮合，极易遭遇游资囤积炒作与恶性价格波动。</td>
+                            <td class="p-3 text-herbal-800 font-medium bg-herbal-50/30">线上集中挂牌，加权成交价格透明公示，真实反映供求。</td>
+                        </tr>
+                        <tr id="row-pay" class="comp-row" data-cat="money">
+                            <td class="p-3 font-bold text-gray-800">资金结算安全</td>
+                            <td class="p-3 text-gray-600">依赖赊销与口头信用，账期拖延数月甚至半年，坏账率居高不下。</td>
+                            <td class="p-3 text-herbal-800 font-medium bg-herbal-50/30">通联支付与银行专户存管，电子签约，验收后现金结算秒级解付。</td>
+                        </tr>
+                        <tr id="row-store" class="comp-row" data-cat="quality">
+                            <td class="p-3 font-bold text-gray-800">仓储与溯源</td>
+                            <td class="p-3 text-gray-600">普通仓库混存，易发硫熏增重、霉变失修，难以实现全程追溯。</td>
+                            <td class="p-3 text-herbal-800 font-medium bg-herbal-50/30">协同专业温控冷链医药物流仓，动态批次抽检，端到端完整追溯。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 3: STC Quality Testing & Interactive Visualization -->
+        <section id="stc-quality" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-5 space-y-4">
+                <div class="border-l-4 border-herbal-600 pl-4">
+                    <h2 class="text-xl sm:text-2xl font-bold text-herbal-900">STC 检验与金色“正”字信誉</h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">香港标准及检定中心 60 年公信力背书</p>
+                </div>
+                <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                    守创平台与<strong class="text-herbal-800">香港标准及检定中心（STC）</strong>建立排他性合作，融合《中华人民共和国药典》与香港特区中药材特色指标，实行严格的“双重检验”。
+                </p>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start space-x-3">
+                    <div class="text-amber-600 font-extrabold text-2xl">正</div>
+                    <div class="text-xs text-amber-900 leading-relaxed">
+                        <strong class="block text-sm font-bold text-amber-900 mb-0.5">金色“正”字品质防伪标识</strong>
+                        只有通过 STC 全项理化检测合格的批次，方可在平台挂牌销售，并在包装与线上货盘展示金色“正”字标识，形成高溢价信任标签。
+                    </div>
+                </div>
+                <ul class="text-xs text-gray-600 space-y-2">
+                    <li class="flex items-center space-x-2">
+                        <span class="text-herbal-600 font-bold">✓</span>
+                        <span>包含有效活性成分（浸出物、挥发油等）定量分析</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <span class="text-herbal-600 font-bold">✓</span>
+                        <span>重金属及有害元素（铅、镉、汞、砷、铜）极限测试</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <span class="text-herbal-600 font-bold">✓</span>
+                        <span>有机氯/有机磷/拟除虫菊酯类等全面农残筛查</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <span class="text-herbal-600 font-bold">✓</span>
+                        <span>黄曲霉毒素、二氧化硫残留及微生物限度检测</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-center">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-herbal-900">STC 检测指标覆盖度与严格度 (对比传统抽检)</h3>
+                    <span class="text-[11px] bg-herbal-100 text-herbal-800 px-2 py-0.5 rounded font-medium">前置全项强制过关</span>
+                </div>
+                <!-- Chart Wrapper Div -->
+                <div class="chart-container">
+                    <canvas id="stcRadarChart"></canvas>
+                </div>
+                <p class="text-[11px] text-gray-400 text-center mt-2">数据说明：基于 0%-100% 标准覆盖率及严苛度量化值展示（含 20% 间距刻度）</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Interactive Onboarding & Entity Access Checklist -->
+        <section id="onboarding" class="space-y-8">
+            <div class="border-l-4 border-amber-500 pl-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-herbal-900">企业准入资质与 6 步入驻流程</h2>
+                <p class="text-gray-500 text-xs sm:text-sm mt-1">
+                    严格的企事业单位法人会员制，点击流程步骤或选择企业类型可查看定制化指南。
+                </p>
+            </div>
+
+            <!-- 6-Step Stepper Component -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 space-y-6">
+                <h3 class="text-base font-bold text-herbal-900 flex items-center justify-between">
+                    <span>平台入驻全流程交互向导</span>
+                    <span class="text-xs font-normal text-gray-500">点击下方步骤卡片切换查看详情</span>
+                </h3>
+
+                <!-- Steps Navigation Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
+                    <button onclick="showStep(1)" id="step-btn-1" class="step-btn p-3 rounded-xl border text-left transition-all bg-herbal-800 text-white border-herbal-800 shadow">
+                        <div class="font-bold text-amber-400 text-xs mb-1">STEP 01</div>
+                        <div class="font-semibold">线上注册申报</div>
+                    </button>
+                    <button onclick="showStep(2)" id="step-btn-2" class="step-btn p-3 rounded-xl border border-gray-200 text-left hover:bg-stonebg transition-all">
+                        <div class="font-bold text-gray-400 text-xs mb-1">STEP 02</div>
+                        <div class="font-semibold">资质穿透核验</div>
+                    </button>
+                    <button onclick="showStep(3)" id="step-btn-3" class="step-btn p-3 rounded-xl border border-gray-200 text-left hover:bg-stonebg transition-all">
+                        <div class="font-bold text-gray-400 text-xs mb-1">STEP 03</div>
+                        <div class="font-semibold">产地GAP评估</div>
+                    </button>
+                    <button onclick="showStep(4)" id="step-btn-4" class="step-btn p-3 rounded-xl border border-gray-200 text-left hover:bg-stonebg transition-all">
+                        <div class="font-bold text-gray-400 text-xs mb-1">STEP 04</div>
+                        <div class="font-semibold">电子签约专户</div>
+                    </button>
+                    <button onclick="showStep(5)" id="step-btn-5" class="step-btn p-3 rounded-xl border border-gray-200 text-left hover:bg-stonebg transition-all">
+                        <div class="font-bold text-gray-400 text-xs mb-1">STEP 05</div>
+                        <div class="font-semibold">STC批次认证</div>
+                    </button>
+                    <button onclick="showStep(6)" id="step-btn-6" class="step-btn p-3 rounded-xl border border-gray-200 text-left hover:bg-stonebg transition-all">
+                        <div class="font-bold text-gray-400 text-xs mb-1">STEP 06</div>
+                        <div class="font-semibold">现货挂牌交割</div>
+                    </button>
+                </div>
+
+                <!-- Dynamic Step Content Display -->
+                <div id="step-content-box" class="bg-stonebg rounded-xl p-5 border border-stone-200 space-y-3">
+                    <!-- Dynamic Javascript Content Injected Here -->
+                </div>
+            </div>
+
+            <!-- Entity Qualification Selector -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 space-y-6">
+                <h3 class="text-base font-bold text-herbal-900">
+                    不同产业链主体的准入资质审查要求
+                </h3>
+                
+                <!-- Entity Tabs -->
+                <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-3 text-xs">
+                    <button onclick="showEntity('base')" id="ent-btn-base" class="ent-tab px-3 py-2 rounded-lg font-bold bg-herbal-100 text-herbal-800">道地种植养殖基地/合作社</button>
+                    <button onclick="showEntity('factory')" id="ent-btn-factory" class="ent-tab px-3 py-2 rounded-lg font-bold text-gray-600 hover:bg-gray-100">中药饮片生产企业</button>
+                    <button onclick="showEntity('pharma')" id="ent-btn-pharma" class="ent-tab px-3 py-2 rounded-lg font-bold text-gray-600 hover:bg-gray-100">工业制药/上市药企</button>
+                    <button onclick="showEntity('trader')" id="ent-btn-trader" class="ent-tab px-3 py-2 rounded-lg font-bold text-gray-600 hover:bg-gray-100">医药流通与外贸企业</button>
+                    <button onclick="showEntity('hospital')" id="ent-btn-hospital" class="ent-tab px-3 py-2 rounded-lg font-bold text-gray-600 hover:bg-gray-100">医疗机构/连锁国医馆</button>
+                </div>
+
+                <!-- Entity Details Panel -->
+                <div id="entity-detail-panel" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <!-- Dynamic Entity Content -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Herb Variety & "3+13" Network Explorer -->
+        <section id="herbs" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="border-l-4 border-herbal-600 pl-4">
+                    <h2 class="text-xl sm:text-2xl font-bold text-herbal-900">首批上线大宗道地药材与“3+13”网络</h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">
+                        依托广东、湖南、江西等省，延伸至全国 13 个主产省份的 40+ 主力常用大宗品种。
+                    </p>
+                </div>
+
+                <!-- Search & Category Filters -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <input type="text" id="herbSearchInput" oninput="filterHerbs()" placeholder="搜索药材名称或产地..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-herbal-600 w-44">
+                    <select id="herbCatSelect" onchange="filterHerbs()" class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:border-herbal-600">
+                        <option value="all">全部分类</option>
+                        <option value="滋补补益">滋补补益类</option>
+                        <option value="理气化痰">理气化痰类</option>
+                        <option value="清热利湿">清热利湿类</option>
+                        <option value="活血祛风">活血祛风类</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Herb Grid Container -->
+            <div id="herb-grid-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                <!-- Javascript dynamic population -->
+            </div>
+        </section>
+
+        <!-- Section 6: Commercial Fee Model & Promotion Calculator -->
+        <section id="calculator" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-5 space-y-4">
+                <div class="border-l-4 border-amber-500 pl-4">
+                    <h2 class="text-xl sm:text-2xl font-bold text-herbal-900">商业收费标准与推广期优惠</h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">正式运营初始阶梯式扶持方案</p>
+                </div>
+                
+                <div class="space-y-3 text-xs text-gray-600">
+                    <div class="bg-stonebg p-3 rounded-lg border border-stone-200">
+                        <strong class="text-herbal-900 text-sm block mb-1">标准会员年费：10,000 元人民币/年</strong>
+                        用于企业身份验真、信用档案维护、交易席位保留及大数据行情订阅。
+                    </div>
+                    <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-900">
+                        <strong class="text-amber-800 text-sm block mb-1">买方优惠：免首年 10,000 元年费</strong>
+                        面向中成药工业、饮片厂、医疗机构等采购主体，推广期内免收首年年费。
+                    </div>
+                    <div class="bg-herbal-50 p-3 rounded-lg border border-herbal-200 text-herbal-900">
+                        <strong class="text-herbal-800 text-sm block mb-1">卖方优惠：长达 6 个月佣金全免</strong>
+                        对挂牌销售道地药材的卖方企业，给予长达 6 个月的交易服务佣金全额减免。
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculator Widget -->
+            <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+                <h3 class="text-base font-bold text-herbal-900 border-b border-gray-100 pb-3 flex items-center justify-between">
+                    <span>首年交易成本与省额测算器</span>
+                    <span class="text-xs font-normal text-amber-600">推广期专享政策</span>
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">企业角色</label>
+                        <select id="calcRole" onchange="runCalculator()" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-herbal-600">
+                            <option value="buyer">采购方 (买方 - 工业药企/饮片厂)</option>
+                            <option value="seller">供应方 (卖方 - 产地基地/合作社)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">预估首年交易额 (万元)</label>
+                        <input type="number" id="calcVolume" oninput="runCalculator()" value="500" min="10" step="10" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-herbal-600">
+                    </div>
+                </div>
+
+                <div id="calc-result-box" class="bg-stonebg p-4 rounded-xl border border-stone-200 grid grid-cols-3 gap-2 text-center">
+                    <div>
+                        <div class="text-[11px] text-gray-500">标准模式年费用</div>
+                        <div id="calcStandardFee" class="text-base sm:text-lg font-bold text-gray-700">¥12,500</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] text-gray-500">推广期实际费用</div>
+                        <div id="calcPromoFee" class="text-base sm:text-lg font-bold text-herbal-800">¥2,500</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] text-amber-600 font-bold">推广期净节省</div>
+                        <div id="calcSavings" class="text-base sm:text-lg font-extrabold text-amber-500">¥10,000</div>
+                    </div>
+                </div>
+
+                <!-- Savings Comparison Bar Chart -->
+                <div class="chart-container" style="height: 180px; max-height: 200px;">
+                    <canvas id="savingsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Policy Benefits & Official Access Channels -->
+        <section id="contact" class="bg-herbal-900 text-white rounded-2xl p-6 sm:p-8 shadow-lg space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Left Column: Policy Dividends -->
+                <div class="lg:col-span-6 space-y-4">
+                    <div class="inline-block bg-amber-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded uppercase">
+                        粤港双向制度红利
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">南沙自贸区与香港离岸赋能</h2>
+                    <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                        受惠于国务院《南沙方案》政策框架，守创平台为入驻企业提供深度的财税、通关与跨境金融赋能。
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2">
+                        <div class="bg-herbal-800/80 p-3 rounded-lg border border-herbal-700">
+                            <strong class="text-amber-400 block mb-1">15% 企业所得税优惠</strong>
+                            鼓励类产业企业减按 15% 征收企业所得税，极大优化财税留存。
+                        </div>
+                        <div class="bg-herbal-800/80 p-3 rounded-lg border border-herbal-700">
+                            <strong class="text-amber-400 block mb-1">检验互认与绿色通关</strong>
+                            与海关探索 STC 检测互认，缩短南沙港进出境仓储与通关周期。
+                        </div>
+                        <div class="bg-herbal-800/80 p-3 rounded-lg border border-herbal-700">
+                            <strong class="text-amber-400 block mb-1">跨境收支便利化</strong>
+                            经常项下外汇收支免事前逐笔审核，支持多币种离岸结算。
+                        </div>
+                        <div class="bg-herbal-800/80 p-3 rounded-lg border border-herbal-700">
+                            <strong class="text-amber-400 block mb-1">香港离岸公信力背书</strong>
+                            借助香港独立检验资质与自由港商誉，助力道地药材合规出海。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Official Entry & Direct Contacts -->
+                <div class="lg:col-span-6 bg-white text-gray-800 rounded-xl p-6 shadow-md space-y-4 border border-gray-100">
+                    <h3 class="text-lg font-bold text-herbal-900 border-b border-gray-200 pb-3 flex justify-between items-center">
+                        <span>官方对接通路与指南</span>
+                        <span class="text-xs font-normal text-gray-500">广州守创中药有限公司</span>
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded bg-herbal-100 text-herbal-800 flex items-center justify-center font-bold text-xs shrink-0">🌐</div>
+                            <div>
+                                <strong class="text-gray-900 block">官方线上交易门户网址：</strong>
+                                <a href="https://www.shouchuangtrading.com" target="_blank" class="text-herbal-600 font-bold hover:underline">www.shouchuangtrading.com</a>
+                                <span class="text-gray-400 block text-[11px] mt-0.5">现货大厅、行情看板与数字入驻通道</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs shrink-0">✉</div>
+                            <div>
+                                <strong class="text-gray-900 block">官方业务对接邮箱：</strong>
+                                <span class="font-mono text-gray-700">cs@shouchuangtrading.com</span>
+                                <span class="text-gray-400 block text-[11px] mt-0.5">接收主体资质材料、品规挂牌申请及 GAP 合作提案</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded bg-herbal-100 text-herbal-800 flex items-center justify-center font-bold text-xs shrink-0">📞</div>
+                            <div>
+                                <strong class="text-gray-900 block">服务咨询专线电话：</strong>
+                                <span class="font-bold text-herbal-800">座机：020-39910704</span> <span class="text-gray-400">|</span> <span class="font-bold text-herbal-800">移动：18664669032</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs shrink-0">🏢</div>
+                            <div>
+                                <strong class="text-gray-900 block">实体办公与运营地址：</strong>
+                                <span class="text-gray-700">广东省广州市南沙区黄阁镇蕉西路132号301房</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-gray-100 flex justify-between items-center text-[11px] text-gray-500">
+                        <span>发起：中医药全产业链香港中心 (tcm.org.hk)</span>
+                        <span>质检认证：香港标准及检定中心 (STC)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-herbal-900 text-gray-400 text-xs py-6 border-t border-herbal-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>香港守创中药贸易平台 - 交互式产业调研报告看板</p>
+            <p class="text-[11px] text-gray-500">数据源自公开研报、广州守创中药有限公司规程与粤港澳大湾区中医药交易政策文件</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- 1. Data Definitions ---
+        const onboardingSteps = {
+            1: {
+                title: "第一阶段：线上注册与主体申报",
+                desc: "经办人登录平台门户提交企业主体信息及营业执照扫描件。",
+                audit: "平台数据中心调取国家企业信用信息公示系统，实时校验工商存续状态与法定代表人身份。",
+                output: "完成基础账号建立，系统派发待审状态代码。"
+            },
+            2: {
+                title: "第二阶段：行业资质穿透式核验",
+                desc: "提交特定经营许可证（生产/经营/医疗）、近三年质量诚信报告。",
+                audit: "平台风控合规部联合法务对涉诉执行、环保及药监行政处罚实施背景穿透核查。",
+                output: "出具主体商事准入审计意见书，进入准入白名单。"
+            },
+            3: {
+                title: "第三阶段：产地尽调与 GAP 评估（供方）",
+                desc: "申报挂牌品种的产地溯源档案、种植地块坐标与农残自检底稿。",
+                audit: "平台专家委员会协同中国中药协会专委会，对种植基地实施现场或远程飞行核验。",
+                output: "建立产地数字化档案，核定道地属性标识。"
+            },
+            4: {
+                title: "第四阶段：电子签约与支付专户绑定",
+                desc: "法定代表人或授权人登录，签署《会员服务与平台交易规约》。",
+                audit: "依托通联支付通道完成对公账户鉴权与资金存管签约，绑定时间戳电子签章。",
+                output: "激活平台专属结算账户，颁发合规电子交易席位证书。"
+            },
+            5: {
+                title: "第五阶段：货样品控与 STC 批次认证",
+                desc: "卖方提交拟上市批次药材的入库申请并提出扦样诉求。",
+                audit: "STC 授权质检人员现场或指定仓扦样，送达实验室完成全项理化与双重药典检测。",
+                output: "出具 STC 官方检测合格报告，授予该批次金色“正”字标识。"
+            },
+            6: {
+                title: "第六阶段：现货挂牌与交易履约",
+                desc: "录入挂牌重量、规格等级、交收方式及报价区间。",
+                audit: "系统将“正”字报告与批次货盘精准绑定，实时在交易大厅挂牌并推送供需匹配。",
+                output: "货盘上线，进入合法可交易撮合状态。"
+            }
+        };
+
+        const entityQualifications = {
+            base: {
+                title: "道地种植/养殖基地/合作社",
+                items: [
+                    "农业产业化龙头企业或规范化中药材种植专业合作社营业执照",
+                    "合法有效的土地流转合同及地块权属证明",
+                    "产地环境评估报告（土壤重金属与灌溉水质检验合格证明）",
+                    "必须建立连续两个生长周期的投入品（农药、肥料）施用台账",
+                    "优先扶持已推行国家新版 GAP 规范的标准化示范基地"
+                ]
+            },
+            factory: {
+                title: "中药饮片生产企业",
+                items: [
+                    "《药品生产许可证》（生产范围必须明确包含中药饮片加工）",
+                    "完整的 GMP 生产合规历史与药监部门监督检查记录",
+                    "提供最近两年的产品质量检验台账及留样检测规程",
+                    "具备独立的化验室理化检测能力证明"
+                ]
+            },
+            pharma: {
+                title: "工业制药/上市药企",
+                items: [
+                    "持有中成药制造范围的《药品生产许可证》",
+                    "采购责任人法定授权书及身份证明文件",
+                    "年度大宗原料采购计划或挂牌需求表",
+                    "企业资信评级报告或公户资金履约证明"
+                ]
+            },
+            trader: {
+                title: "医药流通与外贸企业",
+                items: [
+                    "《药品经营许可证》（批发范围涵盖中药材、中药饮片）",
+                    "对外贸易经营者备案登记凭证或海关进出口货物收发货人备案",
+                    "近三年内无严重海关失信违规与重大税务处罚记录",
+                    "冷链物流与标准化仓储能力证明（或第三方委托协议）"
+                ]
+            },
+            hospital: {
+                title: "医疗机构/连锁国医馆",
+                items: [
+                    "卫健部门核发的《医疗机构执业许可证》",
+                    "中药饮片临床调剂与采购资质授权",
+                    "真实合法的大宗集中采购需求清单"
+                ]
+            }
+        };
+
+        const herbList = [
+            { name: "广陈皮", origin: "广东新会", cat: "理气化痰", code: "GD-CP" },
+            { name: "百合", origin: "湖南/江西", cat: "滋补补益", code: "HN-BH" },
+            { name: "玉竹", origin: "湖南/湖北", cat: "滋补补益", code: "HN-YZ" },
+            { name: "黄精", origin: "湖南/贵州", cat: "滋补补益", code: "HN-HJ" },
+            { name: "广藿香", origin: "广东阳春", cat: "清热利湿", code: "GD-HX" },
+            { name: "阳春砂仁", origin: "广东阳春", cat: "理气化痰", code: "GD-SR" },
+            { name: "枳壳", origin: "江西/湖南", cat: "理气化痰", code: "JX-ZK" },
+            { name: "栀子", origin: "江西", cat: "清热利湿", code: "JX-ZZ" },
+            { name: "人参", origin: "吉林", cat: "滋补补益", code: "JL-RS" },
+            { name: "黄芪", origin: "甘肃/内蒙", cat: "滋补补益", code: "GS-HQ" },
+            { name: "当归", origin: "甘肃岷县", cat: "活血祛风", code: "GS-DG" },
+            { name: "白术", origin: "浙江/安徽", cat: "滋补补益", code: "ZJ-BZ" },
+            { name: "茯苓", origin: "安徽/湖北", cat: "清热利湿", code: "AH-FL" },
+            { name: "党参", origin: "甘肃", cat: "滋补补益", code: "GS-DS" },
+            { name: "三七", origin: "云南文山", cat: "活血祛风", code: "YN-SQ" },
+            { name: "麦冬", origin: "四川/浙江", cat: "滋补补益", code: "SC-MD" },
+            { name: "金银花", origin: "山东/河南", cat: "清热利湿", code: "SD-JYH" },
+            { name: "连翘", origin: "山西/河南", cat: "清热利湿", code: "SX-LQ" },
+            { name: "天麻", origin: "云南/贵州", cat: "活血祛风", code: "YN-TM" },
+            { name: "川芎", origin: "四川眉山", cat: "活血祛风", code: "SC-CX" }
+        ];
+
+        // --- 2. Interactive Navigation Functions ---
+        function showStep(stepNum) {
+            // Update step buttons CSS
+            document.querySelectorAll('.step-btn').forEach((btn, idx) => {
+                if (idx + 1 === stepNum) {
+                    btn.className = "step-btn p-3 rounded-xl border text-left transition-all bg-herbal-800 text-white border-herbal-800 shadow";
+                    btn.querySelector('.font-bold').className = "font-bold text-amber-400 text-xs mb-1";
+                } else {
+                    btn.className = "step-btn p-3 rounded-xl border border-gray-200 text-left hover:bg-stonebg transition-all";
+                    btn.querySelector('.font-bold').className = "font-bold text-gray-400 text-xs mb-1";
+                }
+            });
+
+            // Update content box
+            const data = onboardingSteps[stepNum];
+            const box = document.getElementById('step-content-box');
+            box.innerHTML = `
+                <div class="flex items-center justify-between border-b border-stone-300 pb-2">
+                    <h4 class="font-bold text-herbal-900 text-sm">${data.title}</h4>
+                    <span class="text-[11px] bg-amber-500 text-white px-2 py-0.5 rounded font-bold">阶段 ${stepNum}/6</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+                    <div>
+                        <strong class="text-gray-700 block mb-0.5">触发条件与输入项：</strong>
+                        <p class="text-gray-600">${data.desc}</p>
+                    </div>
+                    <div>
+                        <strong class="text-herbal-800 block mb-0.5">审查与风控机制：</strong>
+                        <p class="text-gray-600">${data.audit}</p>
+                    </div>
+                    <div>
+                        <strong class="text-amber-600 block mb-0.5">产出成果与系统状态：</strong>
+                        <p class="text-gray-800 font-medium">${data.output}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showEntity(key) {
+            // Update entity tabs
+            document.querySelectorAll('.ent-tab').forEach(btn => {
+                btn.className = "ent-tab px-3 py-2 rounded-lg font-bold text-gray-600 hover:bg-gray-100";
+            });
+            document.getElementById(`ent-btn-${key}`).className = "ent-tab px-3 py-2 rounded-lg font-bold bg-herbal-100 text-herbal-800";
+
+            // Update entity content
+            const data = entityQualifications[key];
+            const panel = document.getElementById('entity-detail-panel');
+            
+            let listHtml = data.items.map(item => `
+                <li class="flex items-start space-x-2">
+                    <span class="text-herbal-600 font-bold shrink-0">◆</span>
+                    <span class="text-gray-700">${item}</span>
+                </li>
+            `).join('');
+
+            panel.innerHTML = `
+                <div class="bg-stonebg p-4 rounded-xl border border-stone-200 col-span-1 md:col-span-2">
+                    <h4 class="font-bold text-herbal-900 text-sm mb-3 border-b border-stone-300 pb-2 flex items-center justify-between">
+                        <span>${data.title} - 必备准入资质清单</span>
+                        <span class="text-[11px] font-normal text-amber-600">合规审计项</span>
+                    </h4>
+                    <ul class="space-y-2 text-xs">
+                        ${listHtml}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function filterHerbs() {
+            const search = document.getElementById('herbSearchInput').value.toLowerCase();
+            const cat = document.getElementById('herbCatSelect').value;
+            const container = document.getElementById('herb-grid-container');
+
+            const filtered = herbList.filter(item => {
+                const matchSearch = item.name.toLowerCase().includes(search) || item.origin.toLowerCase().includes(search);
+                const matchCat = (cat === 'all') || (item.cat === cat);
+                return matchSearch && matchCat;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center text-xs text-gray-400 py-6">未找到匹配的道地药材品种</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => `
+                <div class="bg-stonebg p-3 rounded-xl border border-stone-200 hover:border-herbal-600 transition-colors">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="font-bold text-sm text-herbal-900">${item.name}</span>
+                        <span class="text-[10px] font-mono bg-herbal-100 text-herbal-800 px-1.5 py-0.5 rounded">${item.code}</span>
+                    </div>
+                    <div class="text-[11px] text-gray-500">主产区: ${item.origin}</div>
+                    <div class="mt-2 text-[10px] inline-block bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded border border-amber-200">
+                        ${item.cat}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterComparison(type) {
+            const btns = ['all', 'quality', 'money', 'chain'];
+            btns.forEach(b => {
+                const btn = document.getElementById(`btn-comp-${b}`);
+                if (b === type) {
+                    btn.className = "px-3 py-1.5 rounded-md font-semibold bg-herbal-800 text-white";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-md font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200";
+                }
+            });
+
+            const rows = document.querySelectorAll('.comp-row');
+            rows.forEach(row => {
+                if (type === 'all' || row.dataset.cat === type) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // --- 3. Fee Calculator Logic & Savings Chart ---
+        let savingsChartInstance = null;
+
+        function runCalculator() {
+            const role = document.getElementById('calcRole').value;
+            const volume = parseFloat(document.getElementById('calcVolume').value) || 0;
+
+            let stdFee = 0;
+            let promoFee = 0;
+
+            if (role === 'buyer') {
+                // Buyer: Std = 10,000 annual fee. Promo = 0 annual fee (Year 1 free).
+                stdFee = 10000;
+                promoFee = 0;
+            } else {
+                // Seller: Std = 10,000 annual fee + ~0.3% commission. Promo = 10,000 annual fee + 6 months free commission (50% commission waiver).
+                const annualComm = (volume * 10000) * 0.003;
+                stdFee = 10000 + annualComm;
+                promoFee = 10000 + (annualComm * 0.5); // 6 months free
+            }
+
+            const savings = stdFee - promoFee;
+
+            document.getElementById('calcStandardFee').innerText = '¥' + Math.round(stdFee).toLocaleString();
+            document.getElementById('calcPromoFee').innerText = '¥' + Math.round(promoFee).toLocaleString();
+            document.getElementById('calcSavings').innerText = '¥' + Math.round(savings).toLocaleString();
+
+            updateSavingsChart(stdFee, promoFee);
+        }
+
+        function updateSavingsChart(stdFee, promoFee) {
+            const ctx = document.getElementById('savingsChart').getContext('2d');
+            
+            if (savingsChartInstance) {
+                savingsChartInstance.destroy();
+            }
+
+            savingsChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['标准模式年费用', '推广期实际费用'],
+                    datasets: [{
+                        label: '费用 (元)',
+                        data: [stdFee, promoFee],
+                        backgroundColor: ['#94a3b8', '#c86d3d'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' 费用: ¥' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) { return '¥' + value.toLocaleString(); },
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: { font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- 4. Chart.js Radar Chart Setup (STC Quality Metrics) ---
+        function initSTCRadarChart() {
+            const ctx = document.getElementById('stcRadarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['重金属及有害元素', '农药残留全项', '黄曲霉毒素', '二氧化硫残留', '有效活性成分', '微生物限度'],
+                    datasets: [
+                        {
+                            label: '守创平台 STC 双重标准',
+                            data: [98, 95, 96, 92, 95, 90],
+                            fill: true,
+                            backgroundColor: 'rgba(58, 109, 88, 0.25)',
+                            borderColor: '#3a6d58',
+                            pointBackgroundColor: '#1b3a2b',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#3a6d58'
+                        },
+                        {
+                            label: '传统集贸市场平均标准',
+                            data: [40, 35, 30, 45, 50, 40],
+                            fill: true,
+                            backgroundColor: 'rgba(200, 109, 61, 0.15)',
+                            borderColor: '#c86d3d',
+                            borderDash: [4, 4],
+                            pointBackgroundColor: '#c86d3d',
+                            pointBorderColor: '#fff'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { size: 11 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + '% 严格度覆盖';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            beginAtZero: true,
+                            angleLines: { color: '#e5e7eb' },
+                            grid: { color: '#f3f4f6' },
+                            pointLabels: {
+                                font: { size: 11, weight: 'bold' },
+                                color: '#2c3531'
+                            },
+                            ticks: { 
+                                display: true, 
+                                stepSize: 20,
+                                showLabelBackdrop: true,
+                                backdropColor: 'rgba(255, 255, 255, 0.75)',
+                                font: { size: 9 },
+                                callback: function(value) { return value + '%'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- 5. Page Lifecycle Initializations ---
+        window.addEventListener('DOMContentLoaded', () => {
+            showStep(1);
+            showEntity('base');
+            filterHerbs();
+            runCalculator();
+            initSTCRadarChart();
+        });
+    </script>
+</body>
+</html>
